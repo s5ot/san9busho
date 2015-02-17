@@ -1,27 +1,16 @@
-var React = require('react');
-//import {React} from 'react';
-var $ = require('jquery');
+import React from 'react';
+import $ from 'jquery';
 
-/*
-export class BushoItem extends React.component {
+class BushoItem extends React.Component {
   render() {
     return (
       <li className="list-group-item">{this.props.item.name}</li>
     );
   }
 }
-*/
 
-var BushoItem = React.createClass({
-  render: function() {
-    return (
-      <li className="list-group-item">{this.props.item.name}</li>
-    );
-  }
-});
-
-var BushoList = React.createClass({
-  render: function() {
+class BushoList extends React.Component {
+  render() {
     var items = this.props.data.map((busho) => {
       return (
         <BushoItem item={busho}/>
@@ -34,31 +23,32 @@ var BushoList = React.createClass({
       </ul>
     );
   }
-});
+}
 
-var Main = React.createClass({
-  getInitialState: function() {
-    return {data: []};
-  },
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {data: []};
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     $.ajax({
       url: '/san9busho.json',
       dataType: 'json',
       type: 'GET',
-      success: function(data) {
+      success: (data) => {
         this.setState({data: data});
-      }.bind(this),
-      error: function(xhr,  status,  err) {
+      },
+      error: (xhr,  status,  err) => {
         console.error('Error happend');
         console.error(xhr);
         console.error(status);
         console.error(err);
-      }.bind(this)
+      }
     });
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="container">
         <div className="page-header">
@@ -68,6 +58,6 @@ var Main = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = Main;

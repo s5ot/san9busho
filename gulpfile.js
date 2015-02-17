@@ -1,8 +1,6 @@
 var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
-//var reactify = require('reactify');
-//var to5ify = require('6to5ify');
 var browserSync = require('browser-sync');
 
 gulp.task('default', ['markup', 'json', 'watch']);
