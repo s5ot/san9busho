@@ -1,5 +1,6 @@
-import React from 'react';
-import $ from 'jquery';
+import React from "react";
+import $ from "jquery";
+import store from "./store";
 
 class BushoItem extends React.Component {
   render() {
@@ -21,6 +22,44 @@ class BushoList extends React.Component {
       <ul class="list-group">
       {items}
       </ul>
+    );
+  }
+}
+
+import action from "./action";
+
+class SearchForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {name: ''};
+  }
+
+  handleNameChange(e) {
+    action.searchByName(e.target.value);
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <form>
+          <div className="form-group">
+            <input type="name" className="form-control" placeholder="name" onChange={this.handleNameChange} />
+          </div>
+          <div className="form-group">
+            <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
+          </div>
+          <div className="form-group">
+            <label for="exampleInputFile">File input</label>
+            <input type="file" id="exampleInputFile" />
+            <p className="help-block">Example block-level help text here.</p>
+          </div>
+          <div class="checkbox">
+            <label>
+            <input type="checkbox" /> Check me out
+            </label>
+          </div>
+        </form>
+      </div>
     );
   }
 }
@@ -54,6 +93,7 @@ class Main extends React.Component {
         <div className="page-header">
           <h1>san9busho</h1>
         </div>
+      <SearchForm />
       <BushoList data={this.state.data} />
       </div>
     );
