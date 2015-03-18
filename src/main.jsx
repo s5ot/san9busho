@@ -1,6 +1,7 @@
 import React from "react";
 import $ from "jquery";
-import store from "./store";
+import Store from "./store";
+import _ from 'underscore';
 
 class BushoItem extends React.Component {
   render() {
@@ -28,22 +29,31 @@ class BushoList extends React.Component {
 
 import action from "./action";
 
-class SearchForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {name: ''};
-  }
+var SearchForm = React.createClass ({
 
-  handleNameChange(e) {
-    action.searchByName(e.target.value);
-  }
+  getInitialState() {
+    return {name: ''};
+  },
+
+  componentWillMount: function() {
+    this.delayedSearchByName = _.debounce(function(e) {
+      action.searchByName(e.target.value);
+    }, 500);
+
+    action.searchByName('');
+  },
+
+  onNameChange: function(e) {
+    e.persist();
+    this.delayedSearchByName(e);
+  },
 
   render() {
     return (
       <div className="container">
         <form>
           <div className="form-group">
-            <input type="name" className="form-control" placeholder="name" onChange={this.handleNameChange} />
+            <input type="name" className="form-control" placeholder="name" onChange={this.onNameChange} />
           </div>
           <div className="form-group">
             <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
@@ -62,15 +72,26 @@ class SearchForm extends React.Component {
       </div>
     );
   }
-}
+});
 
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {data: []};
-  }
+export default React.createClass({
+  displayName: 'Main',
+
+  getInitialState() {
+    return {
+      data: Store.getAll()
+    };
+  },
+
+  _onChange: function() {
+    console.log(this);
+    this.setState({data: Store.getAll()});
+  },
 
   componentDidMount() {
+    Store.addChangeListener(this._onChange.bind(this));
+
+    /*
     $.ajax({
       url: '/san9busho.json',
       dataType: 'json',
@@ -85,7 +106,12 @@ class Main extends React.Component {
         console.error(err);
       }
     });
-  }
+    */
+ },
+
+  componentWillUnmount() {
+    Store.removeChangeListener(this._onChange.bind(this));
+  },
 
   render() {
     return (
@@ -98,6 +124,7 @@ class Main extends React.Component {
       </div>
     );
   }
-}
+});
 
-module.exports = Main;
+//module.exports = Main;
+//export default Main;

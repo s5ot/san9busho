@@ -7,6 +7,7 @@ import assign from "object-assign";
 
 var ActionTypes = constants.ActionTypes;
 var CHANGE_EVENT = "change";
+var bushos = [];
 
 var BushoStore = assign({}, EventEmitter.EventEmitter.prototype, {
   emitChange() {
@@ -19,6 +20,10 @@ var BushoStore = assign({}, EventEmitter.EventEmitter.prototype, {
 
   removeChangeListener(callback) {
     this.removeListner(CHANGE_EVENT, callback);
+  },
+
+  getAll() {
+    return bushos;
   }
 });
 
@@ -27,7 +32,7 @@ BushoStore.dispatchToken = dispatcher.register(function(payload) {
 
   switch(action.type) {
     case ActionTypes.SEARCH_BY_NAME:
-      console.log("emit");
+      bushos = action.bushos;
       BushoStore.emitChange();
       break;
 
@@ -35,3 +40,5 @@ BushoStore.dispatchToken = dispatcher.register(function(payload) {
       // do nothing
   }
 });
+
+module.exports = BushoStore;
